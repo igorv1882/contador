@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accurate Live Counter</title>
+    <style>
+      body { 
+            background-color: #000000; 
+            color: #ffffff; 
+            font-family: monospace; 
+            font-size: 2rem; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #counter { font-weight: bold; color: #007bff; }
+    </style>
+</head>
+<body>
+
+    <div>Dinheiro passivo: <span id="counter">0.000000</span></div>
+
+    <script>
+        const ratePerSecond = 0.000139;
+        let currentValue = 0;
+        let lastTimestamp = null;
+        const counterElement = document.getElementById('counter');
+
+        function updateCounter(timestamp) {
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            
+            // Calculate actual time passed in seconds since the last frame
+            const elapsedSeconds = (timestamp - lastTimestamp) / 1000;
+            lastTimestamp = timestamp;
+
+            // Increment based on the exact time delta
+            currentValue += elapsedSeconds * ratePerSecond;
+
+            // Render value displaying 6 decimal places to capture the tiny increments
+            counterElement.textContent = currentValue.toFixed(6);
+
+            // Request next animation frame
+            requestAnimationFrame(updateCounter);
+        }
+
+        // Start the counter
+        requestAnimationFrame(updateCounter);
+    </script>
+
+</body>
+</html>
